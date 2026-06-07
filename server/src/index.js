@@ -10,6 +10,9 @@ import { MONGODB_URI, PORT } from './config.js';
 
 const app = express();
 
+// Trust the first proxy hop (required on Render, Railway, Heroku, etc.)
+app.set('trust proxy', 1);
+
 // Security headers
 app.use(helmet());
 
@@ -25,13 +28,17 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (Postman, curl, server-to-server)
       if (!origin) return callback(null, true);
-      // Allow any localhost / 127.0.0.1 port in development
+      // Allow any localhost / 127.0.0.1 in development
       if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
         return callback(null, true);
       }
+      // Allow any Vercel preview/production deployment
+      if (/^https:\/\/[a-z0-9-]+(\.vercel\.app)$/.test(origin)) {
+        return callback(null, true);
+      }
       if (allowedOrigins.includes(origin)) return callback(null, true);
+      console.warn('CORS blocked origin:', origin);
       return callback(null, false);
     },
     credentials: true,
