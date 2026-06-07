@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { fetchRepositories, deleteRepository } from '../utils/api.js';
 import { SkeletonRepo } from '../components/Skeleton.jsx';
 
@@ -8,6 +8,8 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
 
   useEffect(() => { loadRepos(); }, []);
 
@@ -31,6 +33,18 @@ function Dashboard() {
     finally { setDeletingId(null); }
   };
 
+  // Filter repos based on search query
+  const filteredRepos = searchQuery
+    ? repos.filter((r) => {
+        const q = searchQuery.toLowerCase();
+        return (
+          r.name.toLowerCase().includes(q) ||
+          (r.meta?.description || '').toLowerCase().includes(q) ||
+          (r.meta?.language || '').toLowerCase().includes(q)
+        );
+      })
+    : repos;
+
   return (
     <div className="space-y-6">
       {/* Header row */}
@@ -52,8 +66,28 @@ function Dashboard() {
         </Link>
       </div>
 
+      {/* Search indicator */}
+      {searchQuery && (
+        <div className="flex items-center gap-3 rounded-xl border border-cyan-500/20 bg-cyan-500/5 px-4 py-2.5">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-cyan-400 shrink-0">
+            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+          </svg>
+          <span className="text-sm text-slate-300">
+            Showing results for "<span className="text-cyan-300 font-medium">{searchQuery}</span>"
+            {!loading && <span className="text-slate-500"> · {filteredRepos.length} found</span>}
+          </span>
+          <button
+            type="button"
+            onClick={() => setSearchParams({})}
+            className="ml-auto text-xs text-slate-500 hover:text-white transition"
+          >
+            Clear
+          </button>
+        </div>
+      )}
+
       {/* Stats bar */}
-      {!loading && repos.length > 0 && (
+      {!loading && repos.length > 0 && !searchQuery && (
         <div className="grid grid-cols-3 gap-4">
           <StatCard label="Repositories" value={repos.length} icon="📦" />
           <StatCard label="Total files" value={repos.reduce((a, r) => a + r.files.length, 0).toLocaleString()} icon="📄" />
@@ -66,11 +100,19 @@ function Dashboard() {
         <SkeletonRepo />
       ) : error ? (
         <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-6 text-sm text-rose-300">{error}</div>
-      ) : repos.length === 0 ? (
-        <EmptyState />
+      ) : filteredRepos.length === 0 ? (
+        searchQuery ? (
+          <div className="rounded-2xl border border-white/8 bg-slate-900/60 p-12 text-center">
+            <div className="text-4xl mb-3">🔍</div>
+            <p className="text-slate-300 font-medium">No repositories match "{searchQuery}"</p>
+            <p className="mt-2 text-sm text-slate-500">Try a different search term.</p>
+          </div>
+        ) : (
+          <EmptyState />
+        )
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
-          {repos.map((repo) => (
+          {filteredRepos.map((repo) => (
             <RepoCard key={repo._id} repo={repo} deleting={deletingId === repo._id} onDelete={handleDelete} />
           ))}
         </div>

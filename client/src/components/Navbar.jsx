@@ -25,7 +25,7 @@ function Navbar({ sidebarCollapsed }) {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate('/dashboard');
+      navigate(`/dashboard?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
       setSearchQuery('');
     }
