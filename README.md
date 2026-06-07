@@ -188,7 +188,7 @@ npm run build
 
 Update `client/src/utils/api.js`:
 ```js
-export const API_BASE_URL = 'https://your-backend.onrender.com/api';
+export const API_BASE_URL = 'https://devmind-ai-2fa9.onrender.com/api';
 ```
 
 ### Backend → Render / Railway

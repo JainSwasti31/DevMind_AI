@@ -1,6 +1,6 @@
 import { authFetch } from './auth.js';
 
-export const API_BASE_URL = 'http://localhost:5000/api';
+export const API_BASE_URL = 'https://devmind-ai-2fa9.onrender.com/api';
 
 const getAccessToken = () => localStorage.getItem('devmindai_accessToken');
 const getRefreshToken = () => localStorage.getItem('devmindai_refreshToken');

@@ -13,8 +13,9 @@ const app = express();
 // Security headers
 app.use(helmet());
 
-// CORS — allow any localhost origin (dev) and configurable origins (prod)
+// CORS — allow Vercel frontend + localhost for dev
 const allowedOrigins = [
+  'https://dev-mind-ai-sandy.vercel.app',
   'http://localhost:5173',
   'http://localhost:4173',
   'http://localhost:3000',
