@@ -15,11 +15,6 @@ function Home() {
         <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-indigo-500/5 blur-[80px]" />
 
         <div className="relative max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-1.5 text-xs font-medium text-cyan-300 mb-8">
-            <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            Powered by Gemini 2.5 Flash AI
-          </div>
-
           <h1 className="text-4xl md:text-6xl font-bold leading-[1.1] tracking-tight">
             <span className="text-white">Understand any codebase</span><br />
             <span className="text-gradient">in seconds, not hours</span>
@@ -158,7 +153,7 @@ function Home() {
 
       {/* ─── Footer ─── */}
       <footer className="text-center text-xs text-slate-600 pt-4 border-t border-white/5">
-        <p>© 2025 DevMind AI · Built with React, Node.js, MongoDB & Gemini</p>
+        <p>© 2026 DevMind AI · Built with React, Node.js, MongoDB & Gemini</p>
       </footer>
     </div>
   );
