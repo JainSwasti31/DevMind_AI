@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar.jsx';
 import Navbar from './components/Navbar.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import { useAuth } from './context/AuthContext.jsx';
+import { useTheme } from './context/ThemeContext.jsx';
 import Home from './pages/Home.jsx';
 import Auth from './pages/Auth.jsx';
 import Dashboard from './pages/Dashboard.jsx';
@@ -15,6 +16,7 @@ import Help from './pages/Help.jsx';
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const { user } = useAuth();
+  const { theme } = useTheme();
   const location = useLocation();
 
   // Pages where sidebar/navbar are hidden (landing, auth)
@@ -27,7 +29,7 @@ function App() {
   const showNavbar = !!user;
 
   return (
-    <div className="min-h-screen bg-[#060912]">
+    <div className={`min-h-screen app-bg ${theme}`}>
       {showSidebar && <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />}
       {showNavbar && <Navbar sidebarCollapsed={collapsed} />}
 
