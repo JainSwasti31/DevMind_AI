@@ -87,6 +87,19 @@ export async function importFromGitHub(githubUrl) {
 
 // ─── AI API ─────────────────────────────────────────────────────────────────
 
+/** Get user-provided Gemini key from localStorage, if any */
+function getUserApiKey() {
+  return localStorage.getItem('devmindai_user_gemini_key') || '';
+}
+
+/** Build headers that include the user's own API key if set */
+function aiHeaders() {
+  const headers = { 'Content-Type': 'application/json' };
+  const userKey = getUserApiKey();
+  if (userKey) headers['X-User-API-Key'] = userKey;
+  return headers;
+}
+
 /**
  * Open an SSE stream for chat.
  * Returns an EventSource-like object (actually a ReadableStream reader).
@@ -99,7 +112,7 @@ export function streamChat(repoId, message, { onDelta, onDone, onError }) {
     try {
       const response = await apiFetch(`${API_BASE_URL}/ai/${repoId}/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: aiHeaders(),
         body: JSON.stringify({ message }),
         signal: controller.signal,
       });
@@ -158,21 +171,24 @@ export async function clearChatHistory(repoId) {
 export async function explainCode(repoId, { filePath, code, symbol }) {
   const response = await apiFetch(`${API_BASE_URL}/ai/${repoId}/explain`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: aiHeaders(),
     body: JSON.stringify({ filePath, code, symbol }),
   });
   return response.json();
 }
 
 export async function generateReadme(repoId) {
-  const response = await apiFetch(`${API_BASE_URL}/ai/${repoId}/readme`, { method: 'POST' });
+  const response = await apiFetch(`${API_BASE_URL}/ai/${repoId}/readme`, {
+    method: 'POST',
+    headers: aiHeaders(),
+  });
   return response.json();
 }
 
 export async function suggestBugs(repoId, { filePath, code } = {}) {
   const response = await apiFetch(`${API_BASE_URL}/ai/${repoId}/bugs`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: aiHeaders(),
     body: JSON.stringify({ filePath, code }),
   });
   return response.json();

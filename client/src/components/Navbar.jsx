@@ -135,13 +135,6 @@ function Navbar({ sidebarCollapsed }) {
                   <p className="text-xs text-slate-500 truncate">{user.email}</p>
                 </div>
 
-                <div className="py-1.5">
-                  <DropdownLink to="/dashboard" icon="📊" label="Dashboard" onClick={() => setShowProfileMenu(false)} />
-                  <DropdownLink to="/upload" icon="🐙" label="Import repository" onClick={() => setShowProfileMenu(false)} />
-                  <DropdownLink to="/settings" icon="⚙️" label="Settings" onClick={() => setShowProfileMenu(false)} />
-                  <DropdownLink to="/help" icon="❓" label="Help & Docs" onClick={() => setShowProfileMenu(false)} />
-                </div>
-
                 <div className="border-t border-white/5 py-1.5">
                   <button
                     type="button"
@@ -165,19 +158,6 @@ function Navbar({ sidebarCollapsed }) {
         </Link>
       )}
     </header>
-  );
-}
-
-function DropdownLink({ to, icon, label, onClick }) {
-  return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className="flex items-center gap-3 px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-white/5 transition"
-    >
-      <span>{icon}</span>
-      {label}
-    </Link>
   );
 }
 

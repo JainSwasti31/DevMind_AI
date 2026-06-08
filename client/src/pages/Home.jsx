@@ -153,7 +153,7 @@ function Home() {
 
       {/* ─── Footer ─── */}
       <footer className="text-center text-xs text-slate-600 pt-4 border-t border-white/5">
-        <p>© 2026 DevMind AI · Built with React, Node.js, MongoDB & Gemini</p>
+        <p>© 2026 DevMind AI · Your code, understood.</p>
       </footer>
     </div>
   );

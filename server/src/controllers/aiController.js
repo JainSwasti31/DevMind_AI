@@ -18,6 +18,18 @@ import { GEMINI_API_KEY } from '../config.js';
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
+/**
+ * Get a GenerativeAI client — uses the user's own key if sent via header,
+ * otherwise falls back to the server default.
+ */
+function getGenAI(req) {
+  const userKey = req.headers['x-user-api-key'];
+  if (userKey && userKey.trim()) {
+    return new GoogleGenerativeAI(userKey.trim());
+  }
+  return genAI;
+}
+
 const MODEL_PRIMARY  = 'gemini-2.5-flash';
 const MODEL_FALLBACK = 'gemini-2.0-flash';
 
@@ -125,7 +137,7 @@ ${codeContext}`;
 
   try {
     const result = await withRetry(async (model) => {
-      const geminiModel = genAI.getGenerativeModel({ model, systemInstruction });
+      const geminiModel = getGenAI(req).getGenerativeModel({ model, systemInstruction });
       const geminiHistory = toGeminiHistory(history.messages.slice(-6));
       const chatSession = geminiModel.startChat({ history: geminiHistory });
       return chatSession.sendMessageStream(message);
@@ -180,7 +192,7 @@ export const explain = async (req, res) => {
 
   try {
     const result = await withRetry(async (modelName) => {
-      const model = genAI.getGenerativeModel({ model: modelName, systemInstruction: SYSTEM_BASE });
+      const model = getGenAI(req).getGenerativeModel({ model: modelName, systemInstruction: SYSTEM_BASE });
       return model.generateContent(
         `${prompt}\n\nFile: ${filePath || 'unknown'}\n\`\`\`\n${truncated}\n\`\`\``
       );
@@ -234,7 +246,7 @@ ${codeContext}`;
 
   try {
     const result = await withRetry(async (modelName) => {
-      const model = genAI.getGenerativeModel({ model: modelName, systemInstruction: SYSTEM_BASE });
+      const model = getGenAI(req).getGenerativeModel({ model: modelName, systemInstruction: SYSTEM_BASE });
       return model.generateContent(prompt);
     }, MODEL_FALLBACK);
     let readme = '';
@@ -276,7 +288,7 @@ ${contextCode}`;
 
   try {
     const result = await withRetry(async (modelName) => {
-      const model = genAI.getGenerativeModel({ model: modelName, systemInstruction: SYSTEM_BASE });
+      const model = getGenAI(req).getGenerativeModel({ model: modelName, systemInstruction: SYSTEM_BASE });
       return model.generateContent(prompt);
     }, MODEL_FALLBACK);
     let suggestions = '';
