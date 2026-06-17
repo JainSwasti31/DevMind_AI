@@ -25,8 +25,8 @@ function Auth() {
       const result = mode === 'login'
         ? await loginUser(email, password)
         : await registerUser(name, email, password);
-      if (result.accessToken && result.refreshToken && result.user) {
-        auth.login(result.accessToken, result.refreshToken, result.user);
+      if ((result.access_token || result.accessToken) && (result.refresh_token || result.refreshToken) && result.user) {
+        auth.login(result.access_token || result.accessToken, result.refresh_token || result.refreshToken, result.user);
         navigate(from, { replace: true });
         return;
       }

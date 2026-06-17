@@ -1,31 +1,20 @@
 {
   "name": "devmind-ai-server",
   "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "main": "dist/index.js",
+  "version": "1.0.0",
+  "description": "Python FastAPI backend for DevMind AI (converted from Node.js)",
   "scripts": {
-    "dev": "nodemon --watch src --exec node src/index.js",
-    "build": "echo \"Build step not required for JS\"",
-    "start": "node src/index.js"
+    "dev": "python -m uvicorn app.main:app --reload --port 5000",
+    "start": "python -m uvicorn app.main:app --port 5000",
+    "setup": "pip install -r requirements.txt",
+    "migrate": "python -c \"from app.database import init_db; init_db()\"",
+    "test": "pytest"
   },
-  "dependencies": {
-    "@google/generative-ai": "^0.24.1",
-    "adm-zip": "^0.5.9",
-    "axios": "^1.17.0",
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.3",
-    "express-rate-limit": "^6.11.0",
-    "helmet": "^7.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.6.1",
-    "multer": "^1.4.5-lts.1",
-    "openai": "^4.104.0",
-    "unzipper": "^0.12.3"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-  }
+  "keywords": [
+    "python",
+    "fastapi",
+    "ai",
+    "code-analysis",
+    "gemini"
+  ]
 }

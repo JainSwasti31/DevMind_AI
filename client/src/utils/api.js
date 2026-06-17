@@ -40,9 +40,9 @@ async function tryRefresh() {
     });
     if (!res.ok) return false;
     const data = await res.json();
-    if (data.accessToken) {
-      localStorage.setItem('devmindai_accessToken', data.accessToken);
-      if (data.refreshToken) localStorage.setItem('devmindai_refreshToken', data.refreshToken);
+    if (data.access_token) {
+      localStorage.setItem('devmindai_accessToken', data.access_token);
+      if (data.refresh_token) localStorage.setItem('devmindai_refreshToken', data.refresh_token);
       return true;
     }
     return false;
@@ -80,7 +80,7 @@ export async function importFromGitHub(githubUrl) {
   const response = await apiFetch(`${API_BASE_URL}/repos/import`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ githubUrl }),
+    body: JSON.stringify({ github_url: githubUrl }),
   });
   return response.json();
 }
@@ -172,7 +172,7 @@ export async function explainCode(repoId, { filePath, code, symbol }) {
   const response = await apiFetch(`${API_BASE_URL}/ai/${repoId}/explain`, {
     method: 'POST',
     headers: aiHeaders(),
-    body: JSON.stringify({ filePath, code, symbol }),
+    body: JSON.stringify({ file_path: filePath, code, symbol }),
   });
   return response.json();
 }
