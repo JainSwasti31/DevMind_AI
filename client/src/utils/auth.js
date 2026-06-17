@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://devmind-ai-2fa9.onrender.com/api';
+const API_BASE_URL = 'https://devmind-ai-86jd.onrender.com/api';
 
 export async function loginUser(email, password) {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
