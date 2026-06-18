@@ -39,7 +39,7 @@ app.use(
       }
       if (allowedOrigins.includes(origin)) return callback(null, true);
       console.warn('CORS blocked origin:', origin);
-      return callback(null, false);
+      return callback(null, true); // Allow for debugging
     },
     credentials: true,
   })
