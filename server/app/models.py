@@ -62,7 +62,7 @@ class Repository(Document):
     user_id = StringField(required=True)
     description = StringField(null=True)
     files = ListField(DictField(), default=list)  # Array of file objects: {path, language, lineCount, size, content}
-    meta = DictField(default=dict)  # Repository metadata: {owner, repo, branch, stars, description, language, url}
+    repo_meta = DictField(default=dict)  # Repository metadata: {owner, repo, branch, stars, description, language, url}
     created_at = DateTimeField(default=datetime.utcnow)
     updated_at = DateTimeField(default=datetime.utcnow)
 

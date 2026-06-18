@@ -65,12 +65,18 @@ async def health_check():
     return {"status": "DevMind AI backend running"}
 
 
-# Global error handler
+# Global error handler — include CORS header so browser can read the error
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
+    origin = request.headers.get("origin", "")
+    headers = {}
+    if origin:
+        headers["Access-Control-Allow-Origin"] = origin
+        headers["Access-Control-Allow-Credentials"] = "true"
     return JSONResponse(
         status_code=500,
-        content={"error": "Internal server error", "message": str(exc)}
+        content={"error": "Internal server error", "message": str(exc)},
+        headers=headers,
     )
 
 
