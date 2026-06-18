@@ -34,47 +34,23 @@ async def shutdown_event():
     close_db()
 
 
-# CORS middleware
-allowed_origins = [
-    'https://dev-mind-ai-sandy.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:4173',
-    'http://localhost:3000',
-    'http://127.0.0.1:5173',
-    'http://127.0.0.1:4173',
-]
-
+# CORS — allow Vercel frontend and all localhost origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=[
+        'https://dev-mind-ai-sandy.vercel.app',
+        'http://localhost:5173',
+        'http://localhost:4173',
+        'http://localhost:3000',
+        'http://127.0.0.1:5173',
+        'http://127.0.0.1:4173',
+    ],
+    allow_origin_regex=r'https://.*\.vercel\.app|http://localhost:\d+|http://127\.0\.0\.1:\d+',
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
     expose_headers=['*'],
 )
-
-# Custom CORS for dynamic localhost
-@app.middleware("http")
-async def custom_cors_middleware(request: Request, call_next):
-    origin = request.headers.get("origin")
-    
-    if origin:
-        # Allow any localhost / 127.0.0.1 in development
-        if any(origin.startswith(f"http://{host}") for host in ["localhost", "127.0.0.1"]):
-            # Process request
-            response = await call_next(request)
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Credentials"] = "true"
-            return response
-        
-        # Allow any Vercel preview/production deployment
-        if "vercel.app" in origin:
-            response = await call_next(request)
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Credentials"] = "true"
-            return response
-    
-    return await call_next(request)
 
 
 # Include routes
